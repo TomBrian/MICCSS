@@ -66,27 +66,37 @@ if (!empty($options['critical_css'])) {
 
     <!-- How it Works Info -->
     <div class="miccss-info">
-        <h2><?php _e('How the Defer Method Works:', 'miccss'); ?></h2>
+        <h2><?php _e('How the Enhanced Async CSS Loading Works:', 'miccss'); ?></h2>
         <ol>
             <li><?php _e('Critical CSS is inlined in the document head for immediate rendering of above-the-fold content', 'miccss'); ?></li>
-            <li><?php _e('Non-critical stylesheets are converted from rel="stylesheet" to rel="preload" as="style"', 'miccss'); ?></li>
-            <li><?php _e('JavaScript onload event converts preload back to stylesheet after loading', 'miccss'); ?></li>
-            <li><?php _e('Noscript fallback ensures CSS loads even without JavaScript support', 'miccss'); ?></li>
+            <li><?php _e('ALL non-critical stylesheets are automatically converted to load asynchronously', 'miccss'); ?></li>
+            <li><?php _e('Uses rel="preload" with onload event to convert to stylesheet after loading', 'miccss'); ?></li>
+            <li><?php _e('Includes comprehensive noscript fallback for JavaScript-disabled browsers', 'miccss'); ?></li>
+            <li><?php _e('Skip handles ensure critical styles (admin-bar, dashicons) load synchronously', 'miccss'); ?></li>
         </ol>
-        <p><strong><?php _e('The exact method used:', 'miccss'); ?></strong></p>
+        <p><strong><?php _e('Enhanced method implementation:', 'miccss'); ?></strong></p>
         <div class="miccss-css-preview">
             <code>
-function defer_non_critical_css() {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;wp_enqueue_style('main-style', get_stylesheet_uri(), [], null);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;add_filter('style_loader_tag', function($html, $handle) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if ('main-style' === $handle) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$html = str_replace("rel='stylesheet'", "rel='preload' as='style' onload=\"this.rel='stylesheet'\"", $html);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+// Enhanced async CSS loading for ALL stylesheets<br>
+add_filter('style_loader_tag', function ($html, $handle, $href, $media) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Skip admin, login, and critical handles<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (is_admin() || is_login() || in_array($handle, $skip_handles)) {<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return $html;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;}, 10, 2);<br>
-}<br>
-add_action('wp_enqueue_scripts', 'defer_non_critical_css', 20);
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;$media = $media ?: 'all';<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Build async preload tag<br>
+&nbsp;&nbsp;&nbsp;&nbsp;$async = "&lt;link rel='preload' as='style' href='" . esc_url($href) . "' media='{$media}' ";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;$async .= "onload=\"this.onload=null;this.rel='stylesheet'\"&gt;";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;$async .= "&lt;noscript&gt;&lt;link rel='stylesheet' href='" . esc_url($href) . "' media='{$media}'&gt;&lt;/noscript&gt;";<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return $async;<br>
+}, 10, 4);
             </code>
+        </div>
+        <div class="miccss-success" style="margin-top: 15px;">
+            <p><strong><?php _e('✨ New Enhancement:', 'miccss'); ?></strong> <?php _e('This method now loads ALL CSS files asynchronously (except critical ones), providing maximum performance benefits across your entire site!', 'miccss'); ?></p>
         </div>
     </div>
 
@@ -132,28 +142,34 @@ add_action('wp_enqueue_scripts', 'defer_non_critical_css', 20);
                     </td>
                 </tr>
 
-                <!-- Exclude Handles -->
+                <!-- Skip Handles (Critical Styles) -->
                 <tr>
                     <th scope="row">
-                        <label for="miccss_exclude_handles"><?php _e('Exclude Handles', 'miccss'); ?></label>
+                        <label for="miccss_exclude_handles"><?php _e('Skip Handles (Critical Styles)', 'miccss'); ?></label>
                     </th>
                     <td>
                         <input type="text" id="miccss_exclude_handles" name="miccss_exclude_handles" value="<?php echo esc_attr($exclude_handles_string); ?>" class="regular-text" />
                         <p class="description">
-                            <?php _e('Comma-separated list of style handles to exclude from deferring. Default excludes admin-bar and dashicons for proper admin functionality.', 'miccss'); ?>
+                            <strong><?php _e('NEW:', 'miccss'); ?></strong> <?php _e('Comma-separated list of style handles to load synchronously (not deferred). These styles will load immediately and are perfect for critical UI elements like admin-bar, dashicons, or other above-the-fold styles.', 'miccss'); ?>
+                        </p>
+                        <p class="description">
+                            <em><?php _e('All other CSS files will automatically load asynchronously for maximum performance!', 'miccss'); ?></em>
                         </p>
                     </td>
                 </tr>
 
-                <!-- Defer Handles -->
+                <!-- Advanced: Custom Critical Handle -->
                 <tr>
                     <th scope="row">
-                        <label for="miccss_defer_handles"><?php _e('Defer Handles', 'miccss'); ?></label>
+                        <label for="miccss_defer_handles"><?php _e('Additional Skip Handles', 'miccss'); ?></label>
                     </th>
                     <td>
                         <input type="text" id="miccss_defer_handles" name="miccss_defer_handles" value="<?php echo esc_attr($defer_handles_string); ?>" class="regular-text" />
                         <p class="description">
-                            <?php _e('Comma-separated list of style handles to defer using the preload method. By default, main-style (your theme\'s main stylesheet) is deferred.', 'miccss'); ?>
+                            <?php _e('Optional: Additional style handles to skip from async loading. Leave empty unless you have specific critical CSS handles that need immediate loading.', 'miccss'); ?>
+                        </p>
+                        <p class="description">
+                            <strong><?php _e('Examples:', 'miccss'); ?></strong> <code>critical-theme-css, hero-section-css, above-fold-styles</code>
                         </p>
                     </td>
                 </tr>

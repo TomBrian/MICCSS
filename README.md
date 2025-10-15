@@ -9,11 +9,14 @@ A WordPress plugin for manually inlining Critical CSS to improve page load perfo
 ## Features
 
 - 🚀 **Critical CSS Inlining**: Manually inline critical CSS in the document head
-- ⚡ **Non-Critical CSS Deferring**: Uses preload method with onload fallback
-- 🔧 **Configurable**: Easy-to-use admin interface
-- 📱 **Responsive**: Works with all themes and devices
-- 🔍 **SEO Friendly**: Improves Core Web Vitals and page speed scores
-- 🛡️ **Fallback Support**: Noscript fallback ensures CSS loads without JavaScript
+- ⚡ **Universal Async CSS**: ALL non-critical CSS loads asynchronously automatically
+- 🎯 **Smart Skip Handles**: Critical styles (admin-bar, dashicons) load synchronously
+- 🔧 **Enhanced Admin Interface**: Easy-to-use configuration with live validation
+- 📱 **Universal Compatibility**: Works with all themes, plugins, and devices
+- 🔍 **SEO Optimized**: Dramatically improves Core Web Vitals and page speed scores
+- 🛡️ **Bulletproof Fallbacks**: Comprehensive noscript support for all browsers
+- 🧠 **Memory Safe**: Prevents JavaScript memory leaks with proper cleanup
+- 🎛️ **Granular Control**: Fine-tune which styles load sync vs async
 
 ## Installation
 
@@ -24,32 +27,51 @@ A WordPress plugin for manually inlining Critical CSS to improve page load perfo
 
 ## How It Works
 
-The plugin implements a two-step CSS optimization strategy:
+The plugin implements an **enhanced two-step CSS optimization strategy**:
 
 1. **Critical CSS**: Inlined in the `<head>` section for immediate rendering of above-the-fold content
-2. **Non-Critical CSS**: Loaded asynchronously using the preload method with JavaScript fallback
+2. **ALL Non-Critical CSS**: Automatically loaded asynchronously using advanced preload method with comprehensive fallbacks
 
-### The Defer Method
+### Enhanced Async CSS Loading Method
 
 ```php
-function defer_non_critical_css() {
-    wp_enqueue_style('main-style', get_stylesheet_uri(), [], null);
-    add_filter('style_loader_tag', function($html, $handle) {
-        if ('main-style' === $handle) {
-            $html = str_replace("rel='stylesheet'", "rel='preload' as='style' onload=\"this.rel='stylesheet'\"", $html);
-        }
+/**
+ * Make ALL non-critical styles load asynchronously using "preload + onload"
+ * and provide a <noscript> fallback.
+ */
+add_filter('style_loader_tag', function ($html, $handle, $href, $media) {
+    // Don't touch admin, login, or the critical (above-the-fold) handles.
+    if (is_admin() || is_login()) {
         return $html;
-    }, 10, 2);
-}
-add_action('wp_enqueue_scripts', 'defer_non_critical_css', 20);
+    }
+
+    // Skip critical handles that should load synchronously
+    $skip_handles = ['critical-css-handle', 'dashicons', 'admin-bar'];
+
+    if (in_array($handle, $skip_handles, true)) {
+        return $html;
+    }
+
+    // Default media
+    $media = $media ?: 'all';
+
+    // Build async tag: preload first, then switch to stylesheet on load
+    $async  = "<link rel='preload' as='style' href='" . esc_url($href) . "' media='{$media}' ";
+    $async .= "onload=\"this.onload=null;this.rel='stylesheet'\">";
+    // Fallback for users with JS disabled and for older browsers
+    $async .= "<noscript><link rel='stylesheet' href='" . esc_url($href) . "' media='{$media}'></noscript>";
+
+    return $async;
+}, 10, 4);
 ```
 
-This method:
+### 🆕 Key Improvements:
 
-- Changes `rel='stylesheet'` to `rel='preload' as='style'`
-- Adds `onload="this.rel='stylesheet'"` to convert preload to stylesheet after loading
-- Includes `media='print'` to prevent render-blocking
-- Provides noscript fallback for users without JavaScript
+- **Universal Coverage**: Affects ALL CSS files automatically (not just specific handles)
+- **Smart Skipping**: Preserves critical styles (admin-bar, dashicons, custom critical handles)
+- **Enhanced Fallback**: Robust noscript support for JavaScript-disabled browsers
+- **Better Performance**: Uses 4-parameter filter for more precise control
+- **Memory Safety**: Prevents JavaScript memory leaks with `this.onload=null`
 
 ## Configuration
 
@@ -58,9 +80,17 @@ This method:
 Navigate to **Settings > MICCSS** in your WordPress admin to configure:
 
 - **Enable MICCSS**: Toggle the plugin on/off
-- **Critical CSS**: Paste your critical CSS code
-- **Exclude Handles**: Style handles to exclude from deferring
-- **Defer Handles**: Additional style handles to defer
+- **Critical CSS**: Paste your critical CSS code with live validation
+- **Skip Handles (Critical Styles)**: Style handles that should load synchronously
+- **Additional Skip Handles**: Optional extra handles to preserve immediate loading
+- **Minify Critical CSS**: Automatically compress inline CSS
+- **Cache Critical CSS**: Cache processed CSS for better performance
+
+### 🆕 Enhanced Functionality:
+
+- **Automatic Detection**: All CSS files are processed automatically
+- **Universal Coverage**: No need to specify individual handles to defer
+- **Smart Defaults**: Critical WordPress styles are preserved automatically
 
 ### Generating Critical CSS
 

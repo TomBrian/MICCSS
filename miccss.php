@@ -158,44 +158,74 @@ class MICCSS_Plugin
     }
 
     /**
-     * Defer non-critical CSS using preload method
+     * Defer non-critical CSS using improved preload method
+     * Makes all non-critical styles load asynchronously using "preload + onload"
+     * and provides a <noscript> fallback.
      */
     public function defer_non_critical_css()
     {
-        if (!$this->options['enabled'] || is_admin()) {
+        if (!$this->options['enabled']) {
             return;
         }
 
-        // Apply the defer method as specified by the user
-        add_filter('style_loader_tag', array($this, 'modify_style_loader_tag'), 10, 2);
+        // Apply the improved defer method with 4 parameters
+        add_filter('style_loader_tag', array($this, 'modify_style_loader_tag'), 10, 4);
     }
 
     /**
-     * Modify style loader tag to implement defer method
+     * Modify style loader tag to implement improved defer method
+     * This method loads ALL non-critical CSS asynchronously
      */
-    public function modify_style_loader_tag($html, $handle)
+    public function modify_style_loader_tag($html, $handle, $href, $media)
     {
-        // Skip if handle is in exclude list
-        if (in_array($handle, $this->options['exclude_handles'])) {
+        // Don't touch admin, login pages
+        if (is_admin() || (function_exists('is_login') && is_login())) {
             return $html;
         }
 
-        // Apply preload method to main-style and other specified handles
-        if ('main-style' === $handle || in_array($handle, $this->options['defer_handles'])) {
-            // Implement the exact method provided by the user
-            $html = str_replace("rel='stylesheet'", "rel='preload' as='style' onload=\"this.rel='stylesheet'\"", $html);
+        // Get skip handles (critical styles that should load synchronously)
+        $skip_handles = $this->get_skip_handles();
 
-            // Add media print to prevent render blocking
-            if (strpos($html, 'media=') === false) {
-                $html = str_replace('>', ' media="print">', $html);
-            }
-
-            // Add noscript fallback
-            $noscript_html = str_replace(array("rel='preload' as='style'", 'onload="this.rel=\'stylesheet\'"', 'media="print"'), array("rel='stylesheet'", '', 'media="all"'), $html);
-            $html .= '<noscript>' . $noscript_html . '</noscript>';
+        // If this handle should be skipped, return original HTML
+        if (in_array($handle, $skip_handles, true)) {
+            return $html;
         }
 
-        return $html;
+        // Default media if not set
+        $media = $media ?: 'all';
+
+        // Build async tag: preload first, then switch to stylesheet on load
+        $async = "<link rel='preload' as='style' href='" . esc_url($href) . "' media='{$media}' ";
+        $async .= "onload=\"this.onload=null;this.rel='stylesheet'\">";
+
+        // Fallback for users with JS disabled and for older browsers
+        $async .= "<noscript><link rel='stylesheet' href='" . esc_url($href) . "' media='{$media}'></noscript>";
+
+        return $async;
+    }
+
+    /**
+     * Get handles that should be skipped (loaded synchronously)
+     * These are critical styles that need to load immediately
+     */
+    private function get_skip_handles()
+    {
+        // Start with default critical handles
+        $skip_handles = array(
+            'critical-css-handle', // If you have a specific critical CSS handle
+            'dashicons',           // WordPress admin icons
+            'admin-bar'           // WordPress admin bar
+        );
+
+        // Add user-defined exclude handles
+        if (!empty($this->options['exclude_handles']) && is_array($this->options['exclude_handles'])) {
+            $skip_handles = array_merge($skip_handles, $this->options['exclude_handles']);
+        }
+
+        // Allow filtering of skip handles
+        $skip_handles = apply_filters('miccss_skip_handles', $skip_handles);
+
+        return array_unique($skip_handles);
     }
 
     /**
