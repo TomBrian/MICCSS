@@ -1,0 +1,385 @@
+/**
+ * MICCSS Admin Styles
+ * 
+ * @package MICCSS
+ * @author Thomas Kamau
+ * @since 1.0.0
+ */
+
+/* Admin Page Styling */
+.miccss-wrap {
+  max-width: 1200px;
+  margin: 20px 0;
+}
+
+.miccss-header {
+  background: #fff;
+  border: 1px solid #ccd0d4;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.miccss-header h1 {
+  margin: 0 0 10px 0;
+  font-size: 24px;
+  color: #23282d;
+}
+
+.miccss-header p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+/* Info Box */
+.miccss-info {
+  background: #f8f9fa;
+  border-left: 4px solid #0073aa;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 0 3px 3px 0;
+}
+
+.miccss-info h2 {
+  margin-top: 0;
+  color: #0073aa;
+  font-size: 18px;
+}
+
+.miccss-info ol {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.miccss-info li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+/* Warning Box */
+.miccss-warning {
+  background: #fff8e1;
+  border-left: 4px solid #ff9800;
+  padding: 15px;
+  margin: 20px 0;
+  border-radius: 0 3px 3px 0;
+}
+
+.miccss-warning h3 {
+  margin-top: 0;
+  color: #e65100;
+}
+
+/* Success Box */
+.miccss-success {
+  background: #e8f5e8;
+  border-left: 4px solid #4caf50;
+  padding: 15px;
+  margin: 20px 0;
+  border-radius: 0 3px 3px 0;
+}
+
+.miccss-success h3 {
+  margin-top: 0;
+  color: #2e7d32;
+}
+
+/* Form Styling */
+.miccss-form-table {
+  background: #fff;
+  border: 1px solid #ccd0d4;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.miccss-form-table th {
+  background: #f9f9f9;
+  font-weight: 600;
+}
+
+.miccss-textarea {
+  font-family: Consolas, Monaco, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 10px;
+  width: 100%;
+  min-height: 300px;
+  resize: vertical;
+}
+
+.miccss-textarea:focus {
+  border-color: #0073aa;
+  box-shadow: 0 0 0 1px #0073aa;
+  outline: none;
+}
+
+/* Tools Section */
+.miccss-tools {
+  background: #fff;
+  border: 1px solid #ccd0d4;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  padding: 20px;
+  margin-top: 30px;
+}
+
+.miccss-tools h2 {
+  margin-top: 0;
+  color: #23282d;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.miccss-tools ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 15px 0;
+}
+
+.miccss-tools li {
+  margin-bottom: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.miccss-tools li:last-child {
+  border-bottom: none;
+}
+
+.miccss-tools a {
+  color: #0073aa;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.miccss-tools a:hover {
+  color: #005a87;
+  text-decoration: underline;
+}
+
+.miccss-tools a::after {
+  content: " ↗";
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* Stats Section */
+.miccss-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.miccss-stat-card {
+  background: #fff;
+  border: 1px solid #ccd0d4;
+  border-radius: 3px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.miccss-stat-number {
+  font-size: 28px;
+  font-weight: bold;
+  color: #0073aa;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.miccss-stat-label {
+  color: #666;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Button Styling */
+.miccss-button {
+  background: #0073aa;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.2s;
+}
+
+.miccss-button:hover {
+  background: #005a87;
+  color: #fff;
+}
+
+.miccss-button:focus {
+  box-shadow: 0 0 0 2px #78c8e6;
+  outline: none;
+}
+
+.miccss-button-secondary {
+  background: #f0f0f1;
+  color: #2c3338;
+  border: 1px solid #c3c4c7;
+}
+
+.miccss-button-secondary:hover {
+  background: #e0e0e1;
+  color: #2c3338;
+  border-color: #a7aaad;
+}
+
+/* Toggle Switch */
+.miccss-toggle {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+.miccss-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.miccss-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 24px;
+}
+
+.miccss-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.miccss-toggle input:checked + .miccss-toggle-slider {
+  background-color: #0073aa;
+}
+
+.miccss-toggle input:checked + .miccss-toggle-slider:before {
+  transform: translateX(26px);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 782px) {
+  .miccss-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .miccss-textarea {
+    min-height: 200px;
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+
+  .miccss-header {
+    padding: 15px;
+  }
+
+  .miccss-info,
+  .miccss-warning,
+  .miccss-success {
+    padding: 15px;
+  }
+}
+
+/* Code Highlighting for Critical CSS */
+.miccss-css-preview {
+  background: #2d3748;
+  color: #e2e8f0;
+  padding: 15px;
+  border-radius: 5px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-x: auto;
+  margin: 15px 0;
+}
+
+.miccss-css-preview .css-selector {
+  color: #fbd38d;
+}
+
+.miccss-css-preview .css-property {
+  color: #68d391;
+}
+
+.miccss-css-preview .css-value {
+  color: #90cdf4;
+}
+
+.miccss-css-preview .css-comment {
+  color: #a0aec0;
+  font-style: italic;
+}
+
+/* Loading Animation */
+.miccss-loading {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #0073aa;
+  border-radius: 50%;
+  animation: miccss-spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes miccss-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Help Text */
+.miccss-help {
+  font-size: 13px;
+  color: #666;
+  font-style: italic;
+  margin-top: 5px;
+}
+
+.miccss-help-icon {
+  color: #0073aa;
+  cursor: help;
+  text-decoration: none;
+}
+
+.miccss-help-icon:hover {
+  color: #005a87;
+}
+
+/* Error Messages */
+.miccss-error {
+  background: #ffebee;
+  border-left: 4px solid #f44336;
+  padding: 15px;
+  margin: 20px 0;
+  border-radius: 0 3px 3px 0;
+}
+
+.miccss-error h3 {
+  margin-top: 0;
+  color: #c62828;
+}
