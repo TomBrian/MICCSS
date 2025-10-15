@@ -1,20 +1,17 @@
 <?php
 /**
- * Plugin Name: MICCSS - Manual Inline Critical CSS
- * Plugin URI: https://github.com/thomaskamau/miccss
- * Description: A WordPress plugin for manually inlining Critical CSS to improve page load performance. Defers non-critical CSS using preload with fallback.
- * Version: 1.0.0
- * Author: Thomas Kamau
- * Author URI: https://thomaskamau.dev
- * License: GPL v2 or later
- * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: miccss
- * Domain Path: /languages
- * Requires at least: 5.0
- * Tested up to: 6.4
- * Requires PHP: 7.4
- * Network: true
- *
+ * MICCSS - Enhanced Version (Not Active - Use miccss.php instead)
+ * 
+ * This is an improved version of the plugin with additional features.
+ * To use this version, delete miccss.php and rename this file to miccss.php
+ * 
+ * Enhanced Features:
+ * - Singleton pattern
+ * - Better error handling
+ * - AJAX validation
+ * - Caching system
+ * - Minification
+ * 
  * @package MICCSS
  * @author Thomas Kamau
  * @since 1.0.0

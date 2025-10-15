@@ -1,23 +1,63 @@
-# MICCSS Plugin Files
+# MICCSS Plugin Files - DUPLICATION FIX
 
-## Main Plugin File
+## ⚠️ PLUGIN DUPLICATION ISSUE SOLVED
 
-**Use this file as the main plugin file:**
+**Problem**: Having both `miccss.php` and `miccss-improved.php` with plugin headers causes WordPress to show duplicate plugins.
 
-- `miccss-improved.php` → Rename to `miccss.php` for installation
+**Solution**: Choose ONE of these options:
+
+### Option 1: Use Original Version (Simple)
+
+- Keep `miccss.php` as is
+- The `miccss-improved.php` header has been disabled (no longer shows as duplicate)
+
+### Option 2: Use Enhanced Version (Recommended)
+
+1. **Delete** `miccss.php`
+2. **Rename** `miccss-improved.php` to `miccss.php`
+3. **Restore the plugin header** in the renamed file (see instructions below)
 
 ## Installation Instructions
 
-1. **Rename the main file**:
+### For Enhanced Version (Recommended):
+
+1. **Delete the original file**:
+
+   - Delete `miccss.php`
+
+2. **Rename enhanced file**:
 
    - Rename `miccss-improved.php` to `miccss.php`
 
-2. **Upload to WordPress**:
+3. **Restore plugin header** (replace the comment block at the top):
 
-   - Upload entire folder to `/wp-content/plugins/miccss/`
-   - Or zip the folder and upload via WordPress admin
+   ```php
+   <?php
+   /**
+    * Plugin Name: MICCSS - Manual Inline Critical CSS
+    * Plugin URI: https://github.com/TomBrian/miccss
+    * Description: A WordPress plugin for manually inlining Critical CSS to improve page load performance. Defers non-critical CSS using preload with fallback.
+    * Version: 1.0.0
+    * Author: Thomas Kamau
+    * Author URI: https://thomaskamau.dev
+    * License: GPL v2 or later
+    * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+    * Text Domain: miccss
+    * Domain Path: /languages
+    * Requires at least: 5.0
+    * Tested up to: 6.4
+    * Requires PHP: 7.4
+    * Network: true
+    *
+    * @package MICCSS
+    * @author Thomas Kamau
+    * @since 1.0.0
+    */
+   ```
 
-3. **File Structure for Installation**:
+4. **Upload to WordPress**:
+
+5. **File Structure for Installation**:
 
    ```
    /wp-content/plugins/miccss/
@@ -35,7 +75,7 @@
        └── admin-page.php
    ```
 
-4. **Activate**: Go to WordPress Admin → Plugins → Activate "MICCSS"
+6. **Activate**: Go to WordPress Admin → Plugins → Activate "MICCSS"
 
 ## File Descriptions
 
